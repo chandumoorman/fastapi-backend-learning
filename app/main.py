@@ -1,10 +1,16 @@
 from fastapi import FastAPI
-from app.routes import user
+from app.routes import user as user_routes   # 👈 rename
 from app.core.config import APP_NAME
+from app.core.database import engine
+from app.models import user as user_model     # 👈 rename
+
+# Create tables
+user_model.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-app.include_router(user.router)
+# Include router
+app.include_router(user_routes.router)
 
 @app.get("/")
 def root():
